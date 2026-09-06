@@ -262,10 +262,6 @@ Nakon toga otvorite:
 http://localhost:8000/
 ```
 
-## 9) Napomena o GitHub repozitorijumu
-
-Ovaj projekat je pripremljen za GitHub i sadržava sve potrebne fajlove za rad, dok se SQLite baza i privremeni fajlovi automatski kreiraju prilikom pokretanja aplikacije. To znači da korisnici ne moraju ručno da naprave bazu — aplikacija to radi sama.
-
 ## 10) Licenca
 
 Ovaj projekat je namenjen za obuku, razvoj i demonstraciju jednostavnog PHP + SQLite Task Manager SPA sistema.
