@@ -267,6 +267,3 @@ http://localhost:8000/
 Ovaj projekat je namenjen za obuku, razvoj i demonstraciju jednostavnog PHP + SQLite Task Manager SPA sistema.
 
 ---
-
-Ako želite, mogu odmah da vam pripremim i završni GitHub commit i push baš na repozitorijum:
-https://github.com/IvanPavlovic-web/PIAiWS_TaskManager.git
