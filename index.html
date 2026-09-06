@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="bs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Task Manager</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="topbar" id="topbar" style="display:none;">
+    <h1>Task Manager</h1>
+    <div class="topbar-right">
+        <span id="usernameDisplay"></span>
+        <button id="logoutBtn" class="btn btn-secondary">Odjava</button>
+    </div>
+</header>
+
+<main id="app">
+
+    <!-- LOGIN VIEW -->
+    <section id="loginView" class="auth-view">
+        <form id="loginForm" class="auth-card">
+            <h2>Prijava</h2>
+            <p class="error-msg" id="loginError"></p>
+            <label>Korisničko ime</label>
+            <input type="text" id="loginUsername" required autocomplete="username">
+            <label>Lozinka</label>
+            <input type="password" id="loginPassword" required autocomplete="current-password">
+            <button type="submit" class="btn btn-primary">Prijavi se</button>
+            <p class="switch-link">Nemate nalog? <a href="#" id="showRegister">Registrujte se</a></p>
+        </form>
+    </section>
+
+    <!-- REGISTER VIEW -->
+    <section id="registerView" class="auth-view" style="display:none;">
+        <form id="registerForm" class="auth-card">
+            <h2>Registracija</h2>
+            <p class="error-msg" id="registerError"></p>
+            <label>Korisničko ime</label>
+            <input type="text" id="registerUsername" required autocomplete="username">
+            <label>Lozinka</label>
+            <input type="password" id="registerPassword" required autocomplete="new-password">
+            <button type="submit" class="btn btn-primary">Registruj se</button>
+            <p class="switch-link">Već imate nalog? <a href="#" id="showLogin">Prijavite se</a></p>
+        </form>
+    </section>
+
+    <!-- DASHBOARD VIEW -->
+    <section id="dashboardView" style="display:none;">
+        <div class="dashboard-grid">
+
+            <aside class="categories-panel">
+                <h2>Kategorije</h2>
+                <form id="categoryForm" class="inline-form">
+                    <input type="text" id="categoryName" placeholder="Nova kategorija" required>
+                    <button type="submit" class="btn btn-primary btn-small">+</button>
+                </form>
+                <ul id="categoryList" class="category-list"></ul>
+                <button id="clearCategoryFilter" class="btn btn-link">Prikaži sve zadatke</button>
+            </aside>
+
+            <section class="tasks-panel">
+
+                <div class="filters-bar">
+                    <input type="text" id="searchInput" placeholder="Pretraga po naslovu...">
+                    <select id="statusFilter">
+                        <option value="">Svi statusi</option>
+                        <option value="pending">Na čekanju</option>
+                        <option value="in_progress">U toku</option>
+                        <option value="completed">Završeno</option>
+                    </select>
+                </div>
+
+                <form id="taskForm" class="task-form">
+                    <input type="hidden" id="taskId">
+                    <h3 id="taskFormTitle">Novi zadatak</h3>
+                    <input type="text" id="taskTitle" placeholder="Naslov zadatka" required>
+                    <textarea id="taskDescription" placeholder="Opis (opciono)"></textarea>
+                    <div class="task-form-row">
+                        <label>Rok
+                            <input type="date" id="taskDueDate">
+                        </label>
+                        <label>Prioritet
+                            <select id="taskPriority">
+                                <option value="1">1 - Najniži</option>
+                                <option value="2">2</option>
+                                <option value="3" selected>3 - Srednji</option>
+                                <option value="4">4</option>
+                                <option value="5">5 - Najviši</option>
+                            </select>
+                        </label>
+                        <label>Status
+                            <select id="taskStatus">
+                                <option value="pending">Na čekanju</option>
+                                <option value="in_progress">U toku</option>
+                                <option value="completed">Završeno</option>
+                            </select>
+                        </label>
+                        <label>Kategorija
+                            <select id="taskCategory">
+                                <option value="">Bez kategorije</option>
+                            </select>
+                        </label>
+                    </div>
+                    <div class="task-form-actions">
+                        <button type="submit" class="btn btn-primary" id="taskSubmitBtn">Dodaj zadatak</button>
+                        <button type="button" class="btn btn-secondary" id="cancelEditBtn" style="display:none;">Otkaži</button>
+                    </div>
+                </form>
+
+                <div id="taskList" class="task-list"></div>
+
+            </section>
+        </div>
+    </section>
+
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>
