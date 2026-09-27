@@ -10,14 +10,6 @@ A single-page application (SPA) for managing tasks and categories, built with pu
 
 ---
 
-## Screenshots
-
-| Login | Dashboard | Tasks |
-|---|---|---|
-| ![Login](docs/screenshots/login.png) | ![Dashboard](docs/screenshots/dashboard.png) | ![Tasks](docs/screenshots/tasks.png) |
-
----
-
 ## Tech Stack
 
 - **Backend:** PHP 8.2 (Vanilla)
