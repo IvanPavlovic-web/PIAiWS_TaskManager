@@ -1,269 +1,151 @@
 # PIAiWS Task Manager
 
-Ovo je SPA aplikacija za upravljanje zadacima razvijena u čistom PHP-u, sa SQLite bazom i JavaScript frontendom bez biblioteka. Aplikacija podržava registraciju, prijavu, sesije, CRUD operacije za kategorije i zadatke, filtere, pretragu i responzivan dizajn u minimalističkom crno-bijelom stilu.
+A single-page application (SPA) for managing tasks and categories, built with pure PHP 8 without any external libraries or frameworks. The application uses an SQLite database and a vanilla JavaScript frontend.
 
-## Tehnologije
+---
 
-- Backend: PHP 8.x bez frameworka
-- Frontend: HTML5, CSS3, JavaScript (plain JS)
-- Baza podataka: SQLite
-- Sesije: native PHP session
-- API: REST preko Fetch API-ja
+## Architecture Diagram
 
-## Šta je instalirano i korišteno
+![System Architecture and Flow](diagram.png)
 
-Za lokalni rad na Windows mašini koristili smo sljedeće komponente:
+---
 
-- XAMPP 8.2: https://www.apachefriends.org/index.html
-- PHP 8.2: https://www.php.net/
-- Apache HTTP server: https://httpd.apache.org/
-- SQLite: https://www.sqlite.org/
-- PDO SQLite ekstenzija (dio PHP instalacije)
+## Screenshots
 
-Preporučena Windows opcija je XAMPP, jer u sebi sadrži Apache, PHP i SQLite podršku, i najjednostavniji je za početak.
+| Login | Dashboard | Tasks |
+|---|---|---|
+| ![Login](docs/screenshots/login.png) | ![Dashboard](docs/screenshots/dashboard.png) | ![Tasks](docs/screenshots/tasks.png) |
 
-## Karakteristike aplikacije
+---
 
-- Registracija korisnika
-- Prijava i odjava
-- Sesije za zaštitu API ruta
-- Dodavanje, izmjena i brisanje kategorija
-- Dodavanje, izmjena i brisanje zadataka
-- Filtriranje po kategoriji i statusu
-- Pretraga po naslovu
-- Automatsko kreiranje SQLite baze pri prvom pokretanju
-- Lozinke se čuvaju hash-irane koristeći `password_hash()`
+## Tech Stack
 
-## Struktura projekta
+- **Backend:** PHP 8.2 (Vanilla)
+- **Database:** SQLite 3 (PDO driver)
+- **Frontend:** HTML5, CSS3, JavaScript (ES6+ Native Fetch API)
+- **Authentication:** Native PHP Sessions + `password_hash()` / `password_verify()`
 
-```text
-PIAiWS_TaskManager/
-├── index.html
-├── style.css
-├── app.js
-├── router.php
-├── .gitignore
-├── database.sqlite        (automatski se kreira pri prvom pokretanju)
-├── api/
-│   ├── index.php
-│   ├── db.php
-│   ├── auth.php
-│   ├── routes.php
-│   ├── .htaccess
-│   └── controllers/
-│       ├── UserController.php
-│       ├── CategoryController.php
-│       └── TaskController.php
-└── README.md
-```
+This project requires no Composer, npm, external CDNs, or build steps.
 
-## Preduslovi
+---
 
-### Windows
+## Features
 
-Najjednostavnije je instalirati XAMPP:
+- **Authentication:** User registration, login, logout, and session-protected API routes.
+- **Categories:** Full CRUD operations isolated by user account.
+- **Tasks:** Full CRUD operations supporting title, description, due date, priority (1–5), and status (`pending`, `in_progress`, `completed`).
+- **Filtering & Search:** Combined filters by category, status, and title search (300ms debounce).
+- **UI:** Responsive dark-themed interface.
 
-1. Skinite XAMPP sa zvaničnog sajta:
-   https://www.apachefriends.org/index.html
-2. Instalirajte ga sa standardnim podešavanjima.
-3. Nakon instalacije, proverite da postoje:
-   - `C:\xampp\apache\bin\httpd.exe`
-   - `C:\xampp\php\php.exe`
+---
 
-### Linux / macOS
-
-Ako ne koristite XAMPP, instalirajte:
-
-- PHP 8.x: https://www.php.net/downloads.php
-- Apache: https://httpd.apache.org/
-- SQLite: https://www.sqlite.org/download.html
-
-Obavezno uključite `pdo_sqlite` ekstenziju u PHP konfiguraciji.
-
-## 1) Instalacija na Windows-u (preporučeno)
-
-### Korak 1: Instalirajte XAMPP
-
-- Preuzmite XAMPP sa:
-  https://www.apachefriends.org/index.html
-- Instalirajte ga i pokrenite XAMPP Control Panel.
-
-### Korak 2: Uvezite projekat u htdocs
-
-Ako koristite XAMPP, kopirajte projekat u folder:
+## Project Structure
 
 ```text
-C:\xampp\htdocs\PIAiWS_TaskManager
+piaiws-task-manager/
+├── diagram.png           # System architecture and flow diagram
+├── index.html            # SPA shell
+├── style.css             # Dark theme stylesheet
+├── app.js                # Frontend application logic
+├── router.php            # Router for built-in PHP development server
+├── database.sqlite       # Database file (automatically generated)
+└── api/
+    ├── index.php         # API entry point
+    ├── db.php            # PDO connection and schema initialization
+    ├── auth.php          # Session management and JSON response helpers
+    ├── routes.php        # API request router
+    ├── .htaccess         # Apache URL rewrite configuration
+    └── controllers/
+        ├── UserController.php
+        ├── CategoryController.php
+        └── TaskController.php
 ```
 
-Na primjer, ako ste projekat otvorili u folderu `C:\Users\YourName\Desktop\task_manager_spa`, kopirajte ga u:
+---
 
-```text
-C:\xampp\htdocs\PIAiWS_TaskManager
-```
+## Setup and Installation
 
-### Korak 3: Pokrenite Apache
+The SQLite database file (`database.sqlite`) is automatically initialized upon the first API request if it does not exist.
 
-U XAMPP Control Panel-u:
+### Option 1: Built-in PHP Server (Recommended)
 
-- kliknite na `Start` pored `Apache`
-- ako je sve u redu, Apache će biti aktivan
-
-### Korak 4: Otvorite aplikaciju
-
-U browser-u idite na:
-
-```text
-http://localhost/PIAiWS_TaskManager/
-```
-
-Ako se aplikacija učita, sve je konfiguracija ispravno postavljena.
-
-## 2) Pokretanje preko PHP development servera
-
-Ovaj projekat ima i `router.php` fajl, pa ga možete pokrenuti direktno koristeći PHP CLI.
-
-### Windows
-
-U PowerShell-u izvršite:
-
-```powershell
-cd "C:\Users\Admin\Desktop\task_manager_spa"
-& "C:\xampp\php\php.exe" -S localhost:8000 router.php
-```
-
-Zatim otvorite:
-
-```text
-http://localhost:8000/
-```
-
-### Linux / macOS
+Run the built-in PHP development server from the project root directory:
 
 ```bash
-cd /path/to/PIAiWS_TaskManager
 php -S localhost:8000 router.php
 ```
 
-Zatim u browser-u:
+Access the application at [http://localhost:8000](http://localhost:8000).
 
-```text
-http://localhost:8000/
-```
+### Option 2: Apache (XAMPP / LAMP)
 
-## 3) Pokretanje preko Apache-a
-
-Ako je projekat kopiran u `htdocs`, Apache će automatski posluživati aplikaciju preko URL-a:
-
-```text
-http://localhost/PIAiWS_TaskManager/
-```
-
-Napomena:
-
-- `api/.htaccess` služi za prepisivanje ruta ka `api/index.php`
-- `router.php` se koristi uglavnom za lokalni PHP dev server, a ne za produkcioni Apache setup
-
-## 4) Automatsko kreiranje baze
-
-Kada aplikacija prvi put pristupi SQLite bazi, ona će se automatski kreirati ako ne postoji.
-
-Baza će biti kreirana u root folderu projekta kao:
-
-```text
-database.sqlite
-```
-
-U bazi će se automatski napraviti tabele:
-
-- `users`
-- `categories`
-- `tasks`
-
-## 5) API rute
-
-Aplikacija koristi REST API kroz PHP backend.
-
-### Autentifikacija
-
-- `POST /api/register`
-- `POST /api/login`
-- `GET /api/logout`
-
-### Kategorije
-
-- `GET /api/categories`
-- `POST /api/categories`
-- `PUT /api/categories/{id}`
-- `DELETE /api/categories/{id}`
-
-### Zadaci
-
-- `GET /api/tasks`
-- `POST /api/tasks`
-- `PUT /api/tasks/{id}`
-- `DELETE /api/tasks/{id}`
-
-### Filteri i pretraga za zadatke
-
-API podržava opcione query parametre:
-
-- `?category=1`
-- `?status=pending`
-- `?search=ime zadatka`
-
-Primjer:
-
-```text
-/api/tasks?category=1&status=pending
-/api/tasks?search=Domaci
-```
-
-## 6) Sigurnost
-
-Ova aplikacija implementira osnovne sigurnosne mehanizme:
-
-- lozinke se spremaju hash-irane (`password_hash`)
-- session-based autentifikacija
-- protected API rute za sve osim `register` i `login`
-- PDO prepared statements za SQLite upite
-- korisnik može pristupiti samo svojim podacima
-
-## 7) Potrebni linkovi
-
-- PHP: https://www.php.net/
-- Apache: https://httpd.apache.org/
-- XAMPP: https://www.apachefriends.org/index.html
-- SQLite: https://www.sqlite.org/
-- PDO SQLite dokumentacija: https://www.php.net/manual/en/ref.pdo-sqlite.php
-
-## 8) Uputstvo za pokretanje od nule
-
-Ako želite da odmah pokrenete projekat na Windows mašini, uradite ovo:
-
-1. Instalirajte XAMPP sa:
-   https://www.apachefriends.org/index.html
-2. Kopirajte projekat u:
-   `C:\xampp\htdocs\PIAiWS_TaskManager`
-3. Startujte Apache u XAMPP Control Panel-u
-4. Otvorite u browser-u:
-   `http://localhost/PIAiWS_TaskManager/`
-
-Ako želite da pokrenete projekat direktno bez Apache-a:
-
-```powershell
-cd "C:\Users\Admin\Desktop\task_manager_spa"
-& "C:\xampp\php\php.exe" -S localhost:8000 router.php
-```
-
-Nakon toga otvorite:
-
-```text
-http://localhost:8000/
-```
-
-## 10) Licenca
-
-Ovaj projekat je namenjen za obuku, razvoj i demonstraciju jednostavnog PHP + SQLite Task Manager SPA sistema.
+1. Clone or copy the project into your web root directory (e.g., `htdocs/piaiws-task-manager`).
+2. Ensure `mod_rewrite` is enabled in your Apache configuration.
+3. Access the application at [http://localhost/piaiws-task-manager/](http://localhost/piaiws-task-manager/).
 
 ---
+
+## API Reference
+
+All responses return JSON format. Protected endpoints require an active PHP session (except `/api/register` and `/api/login`).
+
+### Authentication
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `POST` | `/api/register` | Register a new user |
+| `POST` | `/api/login` | User login |
+| `GET` | `/api/logout` | Destroy session and logout |
+
+**Payload (`POST /api/register`):**
+
+```json
+{
+  "username": "user",
+  "password": "secure_password"
+}
+```
+
+### Categories
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/api/categories` | Fetch categories for the current user |
+| `POST` | `/api/categories` | Create a new category |
+| `PUT` | `/api/categories/{id}` | Update an existing category |
+| `DELETE` | `/api/categories/{id}` | Delete a category |
+
+### Tasks
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/api/tasks` | Fetch tasks (supports query filters) |
+| `POST` | `/api/tasks` | Create a new task |
+| `PUT` | `/api/tasks/{id}` | Update a task |
+| `DELETE` | `/api/tasks/{id}` | Delete a task |
+
+**Query Parameters (`GET /api/tasks`):**
+
+- `category` (int) — Category ID
+- `status` (string) — Task status (`pending`, `in_progress`, `completed`)
+- `search` (string) — Search query for task title
+
+**Example Request:**
+
+```http
+GET /api/tasks?category=1&status=pending&search=homework
+```
+
+---
+
+## Security Considerations
+
+- **SQL Injection Prevention:** Data queries strictly utilize PDO prepared statements.
+- **Password Hashing:** Passwords are hashed using the standard bcrypt algorithm via PHP's `password_hash()`.
+- **Data Isolation:** Database queries enforce user ownership using `user_id` retrieved directly from the authenticated session.
+
+---
+
+## License
+
+This project is licensed under the MIT License.
